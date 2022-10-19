@@ -2,3 +2,6 @@ CREATE TABLE `puspak-ai`.`vehicle` ( `id` INT NOT NULL AUTO_INCREMENT , `license
 
 
 CREATE TABLE `puspak-ai`.`violation` ( `id` INT NOT NULL AUTO_INCREMENT , `licensePlateNumber` VARCHAR(256) NOT NULL , `violationType` VARCHAR(128) NOT NULL , `status` ENUM('paid','unpaid') NOT NULL , `date` DATE NOT NULL , `time` TIME NOT NULL , `location` VARCHAR(128) NOT NULL , `videoUrl` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+ALTER TABLE violation ADD FOREIGN KEY (licensePlateNumber) REFERENCES vehicle(licensePlateNumber);

@@ -57,9 +57,14 @@ exports.update = (req, res) => {
   connection.query('Update vehicle SET licensePlateNumber=?, manufacturerName=?, model=?, fuelType=?, ownerName=?, rc_status=?, vehicleColor=?, registrationDate=?, insuranceUpto=?, fitnessUpto=?, roadTaxUpto=? WHERE id=?',[licensePlateNumber, manufacturerName, model, fuelType, ownerName, rc_status, vehicleColor, registrationDate, insuranceUpto, fitnessUpto, roadTaxUpto, req.params.id],
     (err, data) => {
       if (err) {
-          res.status(500).send({
-            message: "Error updating Vehicle with id " + req.params.id
+        if(err.code === 'ER_ROW_IS_REFERENCED_2'){
+          return res.status(546).send({
+            message: "Can't update vechicle, it has violation"
           });
+        }
+        res.status(500).send({
+          message: "Error updating Vehicle with id " + req.params.id
+        });
       } else res.send(data);
     }
   );
@@ -69,9 +74,15 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     connection.query("DELETE FROM vehicle WHERE id = ?", [req.params.id], (err, data) => {
       if (err) {
-          res.status(500).send({
-            message: "Could not delete Vehicle with id " + req.params.id
+        console.log(err)
+        if(err.code === 'ER_ROW_IS_REFERENCED_2'){
+          return res.status(546).send({
+            message: "Can't delete vechicle, it has violation"
           });
+        }
+        res.status(500).send({
+          message: "Could not delete Vehicle with id " + req.params.id
+        });
       } else res.send({ message: `Vehicle was deleted successfully!` });
     });
 };
